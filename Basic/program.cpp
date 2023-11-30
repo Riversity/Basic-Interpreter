@@ -49,15 +49,26 @@ Statement *Program::getParsedStatement(int lineNumber) {
 }
 
 int Program::getFirstLineNumber() {
-    // Replace this stub with your own code
-    //todo
+    if (line_number_set.empty()) return -1;
+    else return *line_number_set.begin();
 }
 
 int Program::getNextLineNumber(int lineNumber) {
-    // Replace this stub with your own code
-    //todo
+    auto it = line_number_set.find(lineNumber);
+    if (it == line_number_set.end()) {
+        return -1;
+    }
+    else {
+        ++it;
+        return *it;
+    }
 }
 
+void Program::programList() {
+    for (auto it : line_number_set) {
+        std::cout << str_index.at(it) << '\n';
+    }
+}
 //more func to add
 //todo
 

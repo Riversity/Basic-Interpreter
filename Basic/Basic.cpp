@@ -57,6 +57,34 @@ void processLine(std::string line, Program &program, EvalState &state) {
     scanner.scanNumbers();
     scanner.setInput(line);
 
+    //Yet another basic interpreter
+
+    std::string token;
+    if (scanner.hasMoreTokens()) {
+        token = scanner.nextToken();    
+    }
+    else return;
+
+    bool isNumber = true;
+    int line_number;
+    //Judge whether number
+    try {
+        line_number = stringToInteger(token);
+    }
+    catch (...) {
+        isNumber = false;
+    }
+    if (isNumber) {
+        //Judge whether legal?
+        program.addSourceLine(line_number, line);
+        return;
+    }
+    else {
+        if(token == "REM") {}
+        else if (token == "LET") {
+
+        }
+    }
     //todo
 }
 

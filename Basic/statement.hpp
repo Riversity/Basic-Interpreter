@@ -75,7 +75,7 @@ public:
 
 
 /*
- * The remainder of this file must consists of subclass
+ * The remainder of this file must consist of subclass
  * definitions for the individual statement forms.  Each of
  * those subclasses must define a constructor that parses a
  * statement from a scanner and a method called execute,
@@ -84,5 +84,15 @@ public:
  * an Expression object), the class implementation must also
  * specify its own destructor method to free that memory.
  */
+
+class StmtRem : public Statement {
+public:
+  void execute(EvalState &, Program &);
+};
+
+class StmtLet : public Statement {
+public:
+    std::string comment;
+};
 
 #endif

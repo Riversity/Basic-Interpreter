@@ -142,9 +142,15 @@ public:
 
     //more func to add
     //todo
+    void programList();
+
+    void programRun(EvalState &state);
 
 private:
 
+    std::set<int> line_number_set;
+    std::unordered_map<int, std::string> str_index;
+    std::unordered_map<int, Statement*> stmt_index;
     // Fill this in with whatever types and instance variables you need
     //todo
 };
