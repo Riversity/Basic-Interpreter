@@ -69,10 +69,12 @@ void processLine(std::string line, Program &program, EvalState &state) {
     catch (...) {
         isNumber = false;
     }
+
     if (isNumber) {
         program.addSourceLine(line_number, line);
         return;
     }
+    
     else {
         if (token == "LET") {
             Let command(line);
@@ -110,4 +112,3 @@ void processLine(std::string line, Program &program, EvalState &state) {
     }
     return;
 }
-
