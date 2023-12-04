@@ -57,13 +57,8 @@ void processLine(std::string line, Program &program, EvalState &state) {
     scanner.scanNumbers();
     scanner.setInput(line);
 
-    //Yet another basic interpreter
-
     std::string token;
-    if (scanner.hasMoreTokens()) {
-        token = scanner.nextToken();    
-    }
-    else return;
+    token = scanner.nextToken();
 
     bool isNumber = true;
     int line_number;
@@ -75,16 +70,42 @@ void processLine(std::string line, Program &program, EvalState &state) {
         isNumber = false;
     }
     if (isNumber) {
-        //Judge whether legal?
         program.addSourceLine(line_number, line);
         return;
     }
     else {
-        if(token == "REM") {}
-        else if (token == "LET") {
-
+        if (token == "LET") {
+            Let command(line);
+            command.execute(state, program);
+        }
+        else if (token == "PRINT") {
+            Print command(line);
+            command.execute(state, program);
+        }
+        else if (token == "INPUT") {
+            Input command(line);
+            command.execute(state, program);
+        }
+        else if (token == "RUN") {
+            program.programRun(state);
+        }
+        else if (token == "LIST") {
+            program.programList();
+        }
+        else if (token == "CLEAR") {
+            program.clear();
+        }
+        else if (token == "QUIT") {
+            program.clear();
+            state.Clear();
+            exit(0);
+        }
+        else if (token == "HELP") {
+            std::cout << "Yet another basic interpreter" << std::endl;
+        }
+        else { // Default
+            error("SYNTAX ERROR");
         }
     }
-    //todo
 }
 

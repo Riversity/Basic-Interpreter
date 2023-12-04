@@ -11,6 +11,7 @@
 
 #include <string>
 #include <map>
+#include <set>
 
 /*
  * Class: EvalState
@@ -78,6 +79,11 @@ public:
 private:
 
     std::map<std::string, int> symbolTable;
+
+    const std::set<std::string> kReserved {
+    "REM",  "LET", "PRINT", "INPUT", "END",
+    "GOTO", "IF", "THEN", "RUN", "LIST",
+    "CLEAR", "QUIT", "HELP"};
 
 };
 

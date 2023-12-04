@@ -8,7 +8,7 @@
 
 
 #include "evalstate.hpp"
-
+#include "Utils/error.hpp"
 
 //using namespace std;
 
@@ -23,6 +23,7 @@ EvalState::~EvalState() {
 }
 
 void EvalState::setValue(std::string var, int value) {
+    if(kReserved.count(var)) error("SYNTAX ERROR");
     if(isDefined(var)) symbolTable[var] = value;
     else symbolTable.emplace(var,value);
 }

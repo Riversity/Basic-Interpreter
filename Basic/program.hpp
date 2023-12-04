@@ -94,7 +94,7 @@ public:
  * If no such line exists, this method returns the empty string.
  */
 
-    std::string getSourceLine(int lineNumber);
+    //std::string getSourceLine(int lineNumber);
 
 /*
  * Method: setParsedStatement
@@ -117,7 +117,8 @@ public:
  * returns NULL.
  */
 
-    Statement *getParsedStatement(int lineNumber);
+    // Statement *getParsedStatement(int lineNumber);
+    // No need for a function
 
 /*
  * Method: getFirstLineNumber
@@ -140,19 +141,17 @@ public:
 
     int getNextLineNumber(int lineNumber);
 
-    //more func to add
-    //todo
     void programList();
 
     void programRun(EvalState &state);
 
 private:
-
+    int cur = -1;
     std::set<int> line_number_set;
+    std::set<int> goto_set; // GOTO has to be treated differently
     std::unordered_map<int, std::string> str_index;
     std::unordered_map<int, Statement*> stmt_index;
-    // Fill this in with whatever types and instance variables you need
-    //todo
+    friend class Goto; // Enable GOTO change current line
 };
 
 #endif
