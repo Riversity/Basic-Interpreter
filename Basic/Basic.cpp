@@ -94,6 +94,7 @@ void processLine(std::string line, Program &program, EvalState &state) {
         }
         else if (token == "CLEAR") {
             program.clear();
+            state.Clear();
         }
         else if (token == "QUIT") {
             program.clear();
@@ -107,5 +108,6 @@ void processLine(std::string line, Program &program, EvalState &state) {
             error("SYNTAX ERROR");
         }
     }
+    return;
 }
 

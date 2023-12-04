@@ -148,10 +148,10 @@ public:
 private:
     int cur = -1;
     std::set<int> line_number_set;
-    std::set<int> goto_set; // GOTO has to be treated differently
     std::unordered_map<int, std::string> str_index;
     std::unordered_map<int, Statement*> stmt_index;
     friend class Goto; // Enable GOTO change current line
+    friend class End; // Enable END change current line
 };
 
 #endif

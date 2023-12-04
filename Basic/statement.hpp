@@ -89,6 +89,7 @@ class Rem : public Statement {
 public:
     virtual void execute(EvalState &state, Program &program) {
         /* DO NOTHING */
+        return;
     }
 };
 
@@ -114,11 +115,9 @@ public:
 class Input : public Statement {
 private:
     std::string var;
-    Expression* exp;
 public:
     Input(std::string&);
     virtual void execute(EvalState &state, Program &program);
-    virtual ~Input();
 };
 
 class End : public Statement {
@@ -132,22 +131,21 @@ private:
     int new_line;
 public:
     Goto(std::string&);
+    Goto(int&);
     virtual void execute(EvalState &state, Program &program);
 };
 
 class If : public Statement {
 private:
-    char op;
+    std::strong_ordering op = 0 <=> 0;
     Expression* lep;
     Expression* rep;
+    int new_line;
     bool result;
 public:
     If(std::string&);
     virtual void execute(EvalState &state, Program &program);
-    virtual ~If() {
-        delete lep;
-        delete rep;
-    }
+    virtual ~If();
 };
 
 #endif

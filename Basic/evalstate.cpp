@@ -30,7 +30,10 @@ void EvalState::setValue(std::string var, int value) {
 
 int EvalState::getValue(std::string var) {
     if(isDefined(var)) return symbolTable[var];
-    else return 0;
+    else {
+        error("VARIABLE NOT DEFINED");
+        return 0;
+    }
 }
 
 bool EvalState::isDefined(std::string var) {

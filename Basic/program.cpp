@@ -16,8 +16,12 @@ Program::Program() = default;
 Program::~Program() = default;
 
 void Program::clear() {
-    // Replace this stub with your own code
-    //todo
+    str_index.clear();
+    for (auto i : line_number_set) {
+        delete stmt_index.at(i);
+    }
+    line_number_set.clear();
+    stmt_index.clear();
 }
 
 void Program::addSourceLine(int lineNumber, const std::string &line) 
@@ -28,21 +32,16 @@ void Program::addSourceLine(int lineNumber, const std::string &line)
     scanner.nextToken(); // Skip number
     if(scanner.hasMoreTokens())
     {
-        int pos = scanner.getPosition(); // Remove number at front
+        int pos = 0; // Remove number at front
+        while (pos < line.length() && isdigit(line[pos])) ++pos;
         while (pos < line.length() && line[pos] == ' ') ++pos;
         std::string processed_line = line.substr(pos);
-
         token = scanner.nextToken();
 
         if(line_number_set.count(lineNumber)) // Replacement
         {
             delete stmt_index.at(lineNumber);
-            if(goto_set.count(lineNumber)) {
-                goto_set.erase(lineNumber);
-            }
         }
-
-        line_number_set.insert(lineNumber);
         str_index.insert_or_assign(lineNumber, line);
 
         if(token == "LET")
@@ -59,22 +58,22 @@ void Program::addSourceLine(int lineNumber, const std::string &line)
         }
         else if(token == "INPUT")
         {  
-            //setParsedStatement(lineNumber, new Input(processed_line));       
+            setParsedStatement(lineNumber, new Input(processed_line));       
         }
         else if(token == "IF")
         {
-            //setParsedStatement(lineNumber, new If(processed_line));
+            setParsedStatement(lineNumber, new If(processed_line));
         }    
         else if(token == "GOTO")
         {
             setParsedStatement(lineNumber, new Goto(processed_line));
-            goto_set.insert(lineNumber);
         }
         else if(token == "END")
         {
-            //setParsedStatement(lineNumber, new End(processed_line));
+            setParsedStatement(lineNumber, new End(processed_line));
         }
         else { //Default
+            removeSourceLine(lineNumber);
             error("SYNTAX ERROR");
         }
     }
@@ -92,9 +91,6 @@ void Program::removeSourceLine(int lineNumber)
         str_index.erase(lineNumber);
         delete stmt_index.at(lineNumber);
         stmt_index.erase(lineNumber);
-        if(goto_set.count(lineNumber)) {
-            goto_set.erase(lineNumber);
-        }
     }
 }
 
@@ -103,7 +99,8 @@ void Program::removeSourceLine(int lineNumber)
 } */
 
 void Program::setParsedStatement(int lineNumber, Statement *stmt) {
-    stmt_index.insert_or_assign(lineNumber, stmt);
+    line_number_set.insert(lineNumber);
+    stmt_index[lineNumber] = stmt;
 }
 
 /* Statement *Program::getParsedStatement(int lineNumber) {
@@ -122,6 +119,9 @@ int Program::getNextLineNumber(int lineNumber) {
     }
     else {
         ++it;
+        if (it == line_number_set.end()) {
+            return -1;
+        }
         return *it;
     }
 }
@@ -137,9 +137,10 @@ void Program::programRun(EvalState &state)
     cur = getFirstLineNumber();
     while(cur != -1)
     {
+        int temp = cur;
         stmt_index.at(cur)->execute(state, *this);
         // Judge whether GOTO
-        if(!goto_set.count(cur))
+        if(temp == cur)
         {
             cur = getNextLineNumber(cur);
         }
